@@ -15,4 +15,4 @@ I'm quite happy with how it came out, and I hope you can enjoy it as well :^).
 ## Running
 Deno is secure by default, so it's required to add some flags:
 
-	`deno --allow-net --allow-read --allow-write --allow-env server.ts`
+	deno --allow-net --allow-read --allow-write --allow-env server.ts
