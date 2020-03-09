@@ -33,9 +33,6 @@ router
     try {
       body = (await ctx.request.body());
     } catch (error) {
-    }
-
-    if (!body) {
       ctx.response.status = 400;
       ctx.response.body = {
         msg: "Invalid body format"
@@ -73,16 +70,29 @@ router
   })
   .post("/users/:username", async ctx => {
     const username = ctx.params.username;
-    const password = (await ctx.request.body()).value.password;
 
-    if (!username || !password) {
+    let body;
+    try {
+      body = (await ctx.request.body());
+    } catch (error) {
       ctx.response.status = 400;
       ctx.response.body = {
-        msg: "You need to provide username and password"
+        msg: "Invalid body format"
       };
       return;
     }
-    const user = await getUser(username);
+
+    const password = body.value.password;
+
+    if (!password) {
+      ctx.response.status = 400;
+      ctx.response.body = {
+        msg: "You need to provide a password"
+      };
+      return;
+    }
+
+    const user = await getUser(username!);
     if (!user) {
       ctx.response.status = 400;
       ctx.response.body = {
@@ -94,7 +104,7 @@ router
     const authenticated = hash(password) === user["hashedPassword"];
     let jwt;
     if (authenticated) {
-      jwt = await create(username);
+      jwt = await create(username!);
     }
     ctx.response.body = {
       authenticated,
