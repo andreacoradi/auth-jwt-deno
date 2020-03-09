@@ -2,6 +2,7 @@ import { Application, Router } from "https://deno.land/x/oak/mod.ts";
 import { addUser, getUser } from "./db.ts";
 import { hash } from "./hash.ts";
 import { create, validate } from "./jwt.ts";
+import { parse } from "https://deno.land/std/flags/mod.ts";
 
 const router = new Router();
 router
@@ -76,5 +77,12 @@ router
 const app = new Application();
 app.use(router.routes());
 app.use(router.allowedMethods());
-console.log("Listening on http://localhost:8000");
-await app.listen({ port: 8000 });
+
+const DEFAULT_PORT = 8080;
+
+const argPort = parse(Deno.args).port;
+
+const port = argPort ? Number(argPort) : DEFAULT_PORT;
+
+console.log("Listening on http://localhost:" + port);
+await app.listen({ port: port });
