@@ -4,6 +4,11 @@ JSON Web Tokens ([jwt](https://jwt.io/)) are an open, industry standard method f
 
 This was accomplished with the library [djwt](https://github.com/timonson/djwt).
 
+### Encryption
+This uses sha256 hashed password salted with an env variable.
+
+Encryption is provided by the library [hmac](https://deno.land/x/hmac/)
+
 ## REST API
 Instead of [express](https://expressjs.com/it/) used with node, I chose the [oak](https://github.com/oakserver/oak) web framework.
 
