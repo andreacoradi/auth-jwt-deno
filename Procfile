@@ -1,0 +1,1 @@
+web: deno --allow-net --allow-read --allow-write --allow-env server.ts
