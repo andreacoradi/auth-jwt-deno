@@ -29,7 +29,30 @@ router
     ctx.response.body = "Easy 🔓";
   })
   .post("/users", async ctx => {
-    const { username, password } = (await ctx.request.body()).value;
+    let body;
+    try {
+      body = (await ctx.request.body());
+    } catch (error) {
+    }
+
+    if (!body) {
+      ctx.response.status = 400;
+      ctx.response.body = {
+        msg: "Invalid body format"
+      };
+      return;
+    }
+
+    const { username, password } = body.value;
+
+    if (!username || !password) {
+      ctx.response.status = 400;
+      ctx.response.body = {
+        msg: "You need to provide username and password"
+      };
+      return;
+    }
+
     if (await getUser(username) !== null) {
       ctx.response.status = 400;
       ctx.response.body = {
@@ -51,6 +74,7 @@ router
   .post("/users/:username", async ctx => {
     const username = ctx.params.username;
     const password = (await ctx.request.body()).value.password;
+
     if (!username || !password) {
       ctx.response.status = 400;
       ctx.response.body = {
@@ -62,12 +86,16 @@ router
     if (!user) {
       ctx.response.status = 400;
       ctx.response.body = {
-        msg: `No user found with username: ${username}`
+        msg: `No user found with username: '${username}'`
       };
       return;
     }
+
     const authenticated = hash(password) === user["hashedPassword"];
-    const jwt = await create(username);
+    let jwt;
+    if (authenticated) {
+      jwt = await create(username);
+    }
     ctx.response.body = {
       authenticated,
       jwt
