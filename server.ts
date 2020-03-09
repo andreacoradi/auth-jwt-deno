@@ -76,5 +76,5 @@ router
 const app = new Application();
 app.use(router.routes());
 app.use(router.allowedMethods());
-console.log("Listening on http://localhost:8000");
+console.log("Listening on http://localhost:8080");
 await app.listen({ port: 8080 });
