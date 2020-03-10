@@ -6,7 +6,7 @@ const env = Deno.env();
 export const create = async (username: string) => {
   const claims = {
     iss: username,
-    exp: setExpiration(new Date().getTime() + 86400)
+    exp: setExpiration(new Date().getTime() + 60 * 60 * 1000)
   };
   const header = {
     alg: "HS512",
