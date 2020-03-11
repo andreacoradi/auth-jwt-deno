@@ -27,3 +27,26 @@ export const getUser = async (username: string) => {
   });
   return user;
 };
+
+export const getUsername = async (token: string) => {
+  const db = await getData();
+  let username = "";
+  db["users"].forEach((u: any) => {
+    if (u.token === token) {
+      username = u.username;
+      return;
+    }
+  });
+  return username;
+};
+
+export const setToken = async (username: string, token: string) => {
+  const db = await getData();
+  db["users"].forEach((u: any) => {
+    if (u.username === username) {
+      u["token"] = token
+      return;
+    }
+  });
+  writeData(db)
+}
