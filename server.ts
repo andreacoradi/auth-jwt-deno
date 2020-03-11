@@ -1,5 +1,5 @@
 import { Application, Router } from "https://deno.land/x/oak/mod.ts";
-import { addUser, getUser } from "./db.ts";
+import { addUser, getUser, getUsername, setToken } from "./db.ts";
 import { hash } from "./hash.ts";
 import { create, validate } from "./jwt.ts";
 import { parse } from "https://deno.land/std/flags/mod.ts";
@@ -9,7 +9,7 @@ router
   .get("/", ctx => {
     ctx.response.body = "It works!";
   })
-  .get("/test", async ctx => {
+  .get("/auth", async ctx => {
     const token = ctx.request.headers.get("x-access-token");
     if (!token) {
       ctx.response.status = 403;
@@ -26,7 +26,17 @@ router
       };
       return;
     }
-    ctx.response.body = "Easy 🔓";
+    const username = await getUsername(token)
+    if (username === "") {
+      ctx.response.status = 403;
+      ctx.response.body = {
+        msg: "Unauthorized"
+      };
+      return;
+    }
+    ctx.response.body = {
+      username: username
+    };
   })
   .post("/users", async ctx => {
     let body;
@@ -102,9 +112,11 @@ router
     }
 
     const authenticated = hash(password) === user["hashedPassword"];
+
     let jwt;
     if (authenticated) {
       jwt = await create(username!);
+      setToken(username!, jwt)
     }
     ctx.response.body = {
       authenticated,
