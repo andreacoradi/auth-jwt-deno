@@ -7,6 +7,7 @@ import { parse } from "https://deno.land/std/flags/mod.ts";
 const router = new Router();
 router
   .get("/", ctx => {
+    ctx.response.headers.append("Access-Control-Allow-Origin", "*");
     ctx.response.body = "It works!";
   })
   .get("/auth", async ctx => {
@@ -34,6 +35,7 @@ router
       };
       return;
     }
+    ctx.response.headers.append("Access-Control-Allow-Origin", "*");
     ctx.response.body = {
       username: username
     };
@@ -84,6 +86,7 @@ router
     };
 
     addUser(user);
+    ctx.response.headers.append("Access-Control-Allow-Origin", "*");
     ctx.response.body = user;
   })
   .post("/users/:username", async ctx => {
@@ -135,6 +138,7 @@ router
       jwt = await create(username!);
       setToken(username!, jwt);
     }
+    ctx.response.headers.append("Access-Control-Allow-Origin", "*");
     ctx.response.body = {
       authenticated,
       jwt
