@@ -107,6 +107,9 @@ router
     } catch (error) {
       console.log(error);
     }
+    if (!password) {
+      password = (JSON.parse(body.value)).password;
+    }
 
     if (!password) {
       ctx.response.status = 400;
