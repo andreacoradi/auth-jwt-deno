@@ -7,15 +7,11 @@ import { parse } from "https://deno.land/std/flags/mod.ts";
 const router = new Router();
 router
   .get("/", ctx => {
-    ctx.response.headers.append("Access-Control-Allow-Origin", "*");
-    ctx.response.headers.append(
-      "access-control-allow-headers",
-      "Origin, X-Requested-With, Content-Type, Accept, Range"
-    );
     ctx.response.body = "It works!";
   })
   .get("/auth", async ctx => {
     const token = ctx.request.headers.get("x-access-token");
+
     if (!token) {
       ctx.response.status = 403;
       ctx.response.body = {
@@ -40,11 +36,6 @@ router
       return;
     }
 
-    ctx.response.headers.append("Access-Control-Allow-Origin", "*");
-    ctx.response.headers.append(
-      "access-control-allow-headers",
-      "Origin, X-Requested-With, Content-Type, Accept, Range"
-    );
     ctx.response.body = {
       username: username
     };
@@ -95,11 +86,6 @@ router
     };
 
     addUser(user);
-    ctx.response.headers.append("Access-Control-Allow-Origin", "*");
-    ctx.response.headers.append(
-      "access-control-allow-headers",
-      "Origin, X-Requested-With, Content-Type, Accept, Range"
-    );
     ctx.response.body = user;
   })
   .post("/users/:username", async ctx => {
@@ -151,11 +137,6 @@ router
       jwt = await create(username!);
       setToken(username!, jwt);
     }
-    ctx.response.headers.append("Access-Control-Allow-Origin", "*");
-    ctx.response.headers.append(
-      "access-control-allow-headers",
-      "Origin, X-Requested-With, Content-Type, Accept, Range"
-    );
     ctx.response.body = {
       authenticated,
       jwt
@@ -163,6 +144,14 @@ router
   });
 
 const app = new Application();
+app.use(async (ctx, next) => {
+  ctx.response.headers.append("access-control-allow-origin", "*");
+  ctx.response.headers.append(
+    "access-control-allow-headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Range"
+  );
+  await next();
+});
 app.use(router.routes());
 app.use(router.allowedMethods());
 
