@@ -26,7 +26,7 @@ router
       };
       return;
     }
-    const username = await getUsername(token)
+    const username = await getUsername(token);
     if (username === "") {
       ctx.response.status = 403;
       ctx.response.body = {
@@ -50,7 +50,15 @@ router
       return;
     }
 
-    const { username, password } = body.value;
+    let username;
+    let password;
+    try {
+      const v = JSON.parse(body.value);
+      username = v.username;
+      password = v.password;
+    } catch (error) {
+      console.log(error);
+    }
 
     if (!username || !password) {
       ctx.response.status = 400;
@@ -116,7 +124,7 @@ router
     let jwt;
     if (authenticated) {
       jwt = await create(username!);
-      setToken(username!, jwt)
+      setToken(username!, jwt);
     }
     ctx.response.body = {
       authenticated,
