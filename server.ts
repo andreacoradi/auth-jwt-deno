@@ -8,6 +8,10 @@ const router = new Router();
 router
   .get("/", ctx => {
     ctx.response.headers.append("Access-Control-Allow-Origin", "*");
+    ctx.response.headers.append(
+      "access-control-allow-headers",
+      "Origin, X-Requested-With, Content-Type, Accept, Range"
+    );
     ctx.response.body = "It works!";
   })
   .get("/auth", async ctx => {
@@ -35,7 +39,12 @@ router
       };
       return;
     }
+
     ctx.response.headers.append("Access-Control-Allow-Origin", "*");
+    ctx.response.headers.append(
+      "access-control-allow-headers",
+      "Origin, X-Requested-With, Content-Type, Accept, Range"
+    );
     ctx.response.body = {
       username: username
     };
@@ -87,6 +96,10 @@ router
 
     addUser(user);
     ctx.response.headers.append("Access-Control-Allow-Origin", "*");
+    ctx.response.headers.append(
+      "access-control-allow-headers",
+      "Origin, X-Requested-With, Content-Type, Accept, Range"
+    );
     ctx.response.body = user;
   })
   .post("/users/:username", async ctx => {
@@ -139,6 +152,10 @@ router
       setToken(username!, jwt);
     }
     ctx.response.headers.append("Access-Control-Allow-Origin", "*");
+    ctx.response.headers.append(
+      "access-control-allow-headers",
+      "Origin, X-Requested-With, Content-Type, Accept, Range"
+    );
     ctx.response.body = {
       authenticated,
       jwt
