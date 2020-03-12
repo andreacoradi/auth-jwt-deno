@@ -100,7 +100,12 @@ router
       return;
     }
 
-    const password = body.value.password;
+    let password;
+    try {
+      password = JSON.parse(body.value).password;
+    } catch (error) {
+      console.log(error);
+    }
 
     if (!password) {
       ctx.response.status = 400;
