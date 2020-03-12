@@ -102,7 +102,8 @@ router
 
     let password;
     try {
-      password = JSON.parse(body.value).password;
+      const v = body.value;
+      password = v.password;
     } catch (error) {
       console.log(error);
     }
