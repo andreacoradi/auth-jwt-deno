@@ -1,1 +1,1 @@
-web:deno -A server.ts --port=${PORT}
+web: deno -A server.ts --port=${PORT}
