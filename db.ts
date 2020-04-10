@@ -1,4 +1,4 @@
-import { readJson, writeJson, exists } from "https://deno.land/std@v0.38.0/fs/mod.ts";
+import { readJson, writeJson, readFileStr, exists } from "https://deno.land/std@v0.38.0/fs/mod.ts";
 
 const DB_URL = "./db.json"
 
@@ -7,7 +7,7 @@ const initialize_db = async () => {
 }
 
 const getData = async (): Promise<any> => {
-  if(!await exists(DB_URL)) {
+  if(!await exists(DB_URL) || (await readFileStr(DB_URL) == "")) {
     await initialize_db()
   }
   return  await readJson(DB_URL) as any
