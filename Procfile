@@ -1,1 +1,1 @@
-web: deno --allow-net=${PORT} --allow-write --allow-env --allow-read server.ts --port=${PORT}
+web: deno --allow-net=:${PORT} --allow-read --allow-write --allow-env server.ts --port=${PORT}
