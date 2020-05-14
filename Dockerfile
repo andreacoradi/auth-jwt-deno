@@ -6,4 +6,4 @@ USER deno
 
 ADD . /app
 
-CMD ["--unstable", "-A", "server.ts"]
+CMD ["run", "--unstable", "-A", "server.ts"]
