@@ -1,21 +1,20 @@
-import { Application, Router } from "https://deno.land/x/oak/mod.ts";
+import { Application, Router } from "https://deno.land/x/oak@v4.0.0/mod.ts";
 import { addUser, getUser, getUsername, setToken } from "./db.ts";
 import { hash } from "./hash.ts";
 import { create, validate } from "./jwt.ts";
-import { parse } from "https://deno.land/std/flags/mod.ts";
 
 const router = new Router();
 router
-  .get("/", ctx => {
+  .get("/", (ctx) => {
     ctx.response.body = "It works!";
   })
-  .get("/auth", async ctx => {
+  .get("/auth", async (ctx) => {
     const token = ctx.request.headers.get("x-access-token");
 
     if (!token) {
       ctx.response.status = 403;
       ctx.response.body = {
-        msg: "Unauthorized"
+        msg: "Unauthorized",
       };
       return;
     }
@@ -23,7 +22,7 @@ router
     if (!valid) {
       ctx.response.status = 403;
       ctx.response.body = {
-        msg: "Unauthorized"
+        msg: "Unauthorized",
       };
       return;
     }
@@ -31,23 +30,23 @@ router
     if (username === "") {
       ctx.response.status = 403;
       ctx.response.body = {
-        msg: "Unauthorized"
+        msg: "Unauthorized",
       };
       return;
     }
 
     ctx.response.body = {
-      username: username
+      username: username,
     };
   })
-  .post("/users", async ctx => {
+  .post("/users", async (ctx) => {
     let body;
     try {
       body = (await ctx.request.body());
     } catch (error) {
       ctx.response.status = 400;
       ctx.response.body = {
-        msg: "Invalid body format"
+        msg: "Invalid body format",
       };
       return;
     }
@@ -65,7 +64,7 @@ router
     if (!username || !password) {
       ctx.response.status = 400;
       ctx.response.body = {
-        msg: "You need to provide username and password"
+        msg: "You need to provide username and password",
       };
       return;
     }
@@ -73,7 +72,7 @@ router
     if (await getUser(username) !== null) {
       ctx.response.status = 400;
       ctx.response.body = {
-        msg: "User already exists"
+        msg: "User already exists",
       };
       return;
     }
@@ -82,13 +81,13 @@ router
 
     const user = {
       username,
-      hashedPassword
+      hashedPassword,
     };
 
     addUser(user);
     ctx.response.body = user;
   })
-  .post("/users/:username", async ctx => {
+  .post("/users/:username", async (ctx) => {
     const username = ctx.params.username;
 
     let body;
@@ -97,7 +96,7 @@ router
     } catch (error) {
       ctx.response.status = 400;
       ctx.response.body = {
-        msg: "Invalid body format"
+        msg: "Invalid body format",
       };
       return;
     }
@@ -116,7 +115,7 @@ router
     if (!password) {
       ctx.response.status = 400;
       ctx.response.body = {
-        msg: "You need to provide a password"
+        msg: "You need to provide a password",
       };
       return;
     }
@@ -125,7 +124,7 @@ router
     if (!user) {
       ctx.response.status = 400;
       ctx.response.body = {
-        msg: `No user found with username: '${username}'`
+        msg: `No user found with username: '${username}'`,
       };
       return;
     }
@@ -139,7 +138,7 @@ router
     }
     ctx.response.body = {
       authenticated,
-      jwt
+      jwt,
     };
   });
 
@@ -148,7 +147,7 @@ app.use(async (ctx, next) => {
   ctx.response.headers.append("access-control-allow-origin", "*");
   ctx.response.headers.append(
     "access-control-allow-headers",
-    "x-access-token, Origin, X-Requested-With, Content-Type, Accept, Range"
+    "x-access-token, Origin, X-Requested-With, Content-Type, Accept, Range",
   );
   await next();
 });
@@ -159,7 +158,7 @@ const DEFAULT_PORT = 8080;
 const argPort = Deno.env.get("PORT");
 const port = argPort ? Number(argPort) : DEFAULT_PORT;
 
-const address = `0.0.0.0:${port}`
+const address = `0.0.0.0:${port}`;
 
 console.log(`Listening on http://${address}`);
 await app.listen(address);

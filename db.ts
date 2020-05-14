@@ -1,20 +1,25 @@
-import { readJson, writeJson, readFileStr, exists } from "https://deno.land/std@v0.38.0/fs/mod.ts";
+import {
+  readJson,
+  writeJson,
+  readFileStr,
+  exists,
+} from "https://deno.land/std@v0.51.0/fs/mod.ts";
 
-const DB_URL = "./db.json"
+const DB_URL = "./db.json";
 
 const initialize_db = async () => {
-  await writeJson(DB_URL, { users: [] })
-}
+  await writeJson(DB_URL, { users: [] });
+};
 
 const getData = async (): Promise<any> => {
-  if(!await exists(DB_URL) || (await readFileStr(DB_URL) == "")) {
-    await initialize_db()
+  if (!await exists(DB_URL) || (await readFileStr(DB_URL) == "")) {
+    await initialize_db();
   }
-  return  await readJson(DB_URL) as any
+  return await readJson(DB_URL) as any;
 };
 
 const writeData = async (data: any): Promise<void> => {
-  await writeJson(DB_URL, data)
+  await writeJson(DB_URL, data);
 };
 
 export const addUser = async (user: any) => {
@@ -51,9 +56,9 @@ export const setToken = async (username: string, token: string) => {
   const db: any = await getData();
   db["users"].forEach((u: any) => {
     if (u.username === username) {
-      u["token"] = token
+      u["token"] = token;
       return;
     }
   });
-  writeData(db)
-}
+  writeData(db);
+};
