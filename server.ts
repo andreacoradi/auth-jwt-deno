@@ -55,7 +55,7 @@ router
     let username;
     let password;
     try {
-      const v = JSON.parse(body.value);
+      const v = body.value;
       username = v.username;
       password = v.password;
     } catch (error) {
@@ -156,10 +156,10 @@ app.use(router.routes());
 app.use(router.allowedMethods());
 
 const DEFAULT_PORT = 8080;
-
-const argPort = parse(Deno.args).port;
-
+const argPort = Deno.env.get("PORT");
 const port = argPort ? Number(argPort) : DEFAULT_PORT;
 
-console.log("Listening on http://localhost:" + port);
-await app.listen({ port: port });
+const address = `0.0.0.0:${port}`
+
+console.log(`Listening on http://${address}`);
+await app.listen(address);
