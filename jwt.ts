@@ -29,6 +29,6 @@ export const validate = async (token: string) => {
   return await validateJwt(
     token,
     SALT!,
-    { isThrowing: false }
+    { isThrowing: false },
   );
 };
